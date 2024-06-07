@@ -5,7 +5,7 @@ from models import PokemonListResponse, PokemonDetailsResponse
 router = APIRouter()
 
 
-@router.get("/pokemon",
+@router.get("/pokemons",
             response_model=PokemonListResponse,
             summary="List Pokémon",
             description="Returns a list of Pokémon with pagination, ordered alphabetically by name.")
