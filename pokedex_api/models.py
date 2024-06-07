@@ -1,24 +1,25 @@
 from pydantic import BaseModel
-from typing import List
+from typing import Optional, List
 
 class Pagination(BaseModel):
-    paginaAnterior: str
-    paginaProxima: str
+    paginaAnterior: Optional[str]
+    paginaProxima: Optional[str]
 
-class Pokemon(BaseModel):
+
+class PokemonBase(BaseModel):
     id: int
     name: str
     url: str
 
-class DetailedPokemon(Pokemon):
-    type: str
-    power: str
-    image: str
+class Pokemon(PokemonBase):
+    type: Optional[str]
+    power: Optional[str]
+    image: Optional[str]
 
-class PokemonResponse(BaseModel):
-    pokemon: List[Pokemon]
+class PokemonListResponse(BaseModel):
+    pokemon: List[PokemonBase]
     pagination: Pagination
 
-class DetailedPokemonResponse(BaseModel):
-    pokemon: List[DetailedPokemon]
+class PokemonDetailsResponse(BaseModel):
+    pokemon: List[Pokemon]
     pagination: Pagination
