@@ -14,4 +14,6 @@ export class PokemonsComponent implements OnInit {
     window.location.href = 'http://localhost:8000/pokemons?start_index=0&page_size=50';
   }
 
+
+
 }

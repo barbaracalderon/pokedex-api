@@ -1,12 +1,28 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-data',
-  standalone: true,
-  imports: [],
   templateUrl: './data.component.html',
-  styleUrl: './data.component.css'
+  styleUrls: ['./data.component.css']
 })
-export class DataComponent {
+export class DataComponent implements OnInit {
+  pokemons: any[] = [];
 
+  constructor(private http: HttpClient) { }
+
+  ngOnInit(): void {
+    this.fetchPokemons();
+  }
+
+  fetchPokemons(): void {
+    this.http.get<any[]>('http://localhost:8000/data').subscribe(
+      data => {
+        this.pokemons = data;
+      },
+      error => {
+        console.error('Error fetching Pokémon data', error);
+      }
+    );
+  }
 }
