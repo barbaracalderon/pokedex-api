@@ -4,7 +4,6 @@ import { HeaderComponent } from './header/header.component';
 import { HttpClientModule } from '@angular/common/http';
 
 
-
 @Component({
   selector: 'app-root',
   standalone: true,
