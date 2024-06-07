@@ -8,7 +8,7 @@ import { DocsComponent } from './docs/docs.component';
 
 export const routes: Routes = [
     { path: 'home', component: HomeComponent },
-    { path: 'pokemons', component: PokemonsComponent },
+    { path: 'pokemons', component: PokemonsComponent},
     { path: 'data', component: DataComponent },
     { path: 'export', component: ExportComponent },
     { path: 'swagger', component: DocsComponent },

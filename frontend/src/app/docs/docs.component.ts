@@ -13,4 +13,5 @@ export class DocsComponent implements OnInit {
   ngOnInit(): void {
     window.location.href = 'http://localhost:8000/docs';
   }
+
 }
