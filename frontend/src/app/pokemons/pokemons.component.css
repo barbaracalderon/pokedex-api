@@ -1,0 +1,25 @@
+.container {
+    margin-top: 20px;
+  }
+  
+  h2 {
+    font-family: 'Pokemon', sans-serif;
+    text-align: center;
+    color: #ffcb05;
+  }
+  
+  .list-group-item {
+    background-color: #1c1c1c;
+    border: 1px solid #333;
+    color: #ffcb05;
+  }
+  
+  .list-group-item a {
+    color: #ffcb05;
+    text-decoration: none;
+  }
+  
+  .list-group-item:hover {
+    background-color: #333;
+  }
+  

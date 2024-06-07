@@ -1,0 +1,35 @@
+<div class="header-container shadow-sm bg-dark-pokemon">
+    <nav class="navbar navbar-expand-md">
+        <div class="container d-flex justify-content-between align-items-center">
+            <a class="navbar-brand text-light" target="_blank">POKÉDEX</a>
+            <ul class="nav nav-pills">
+                <li class="nav-item">
+                    <a routerLink="/home" routerLinkActive="active-link" class="nav-link text-light">
+                        Home
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a routerLink="/pokemons" routerLinkActive="active-link" class="nav-link text-light">
+                        Pokémons
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a routerLink="/data" routerLinkActive="active-link" class="nav-link text-light">
+                        Data
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a routerLink="/export" routerLinkActive="active-link" class="nav-link text-light">
+                        Export
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a routerLink="/swagger" routerLinkActive="active-link" class="nav-link text-light" target="_blank">
+                        Swagger
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+</div>
+<router-outlet></router-outlet>

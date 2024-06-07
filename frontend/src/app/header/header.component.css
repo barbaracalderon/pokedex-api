@@ -1,0 +1,57 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+body {
+    background-color: #1b1b1b;
+    color: #f8f9fa;
+    font-family: 'Press Start 2P', cursive;
+}
+
+.header-container {
+    background-color: #1b1b1b;
+    border-bottom: 2px solid #ffcb05;
+}
+
+.navbar {
+    background-color: #1b1b1b;
+    border-bottom: 2px solid #ffcb05;
+}
+
+.navbar .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.navbar-brand {
+    font-family: 'Press Start 2P', cursive;
+    font-weight: bold;
+    color: #ffcb05;
+    font-size: 1.5em;
+}
+
+.nav-link {
+    color: #adb5bd;
+    font-family: 'Press Start 2P', cursive;
+    font-size: 1.2em;
+    padding: 10px 20px;
+    transition: color 0.3s, background-color 0.3s, box-shadow 0.3s;
+}
+
+.nav-link:hover,
+.nav-link.active-link {
+    color: #ffcb05;
+    background-color: transparent;
+    box-shadow: 0 0 10px #ffcb05, 0 0 20px #ffcb05, 0 0 30px #ffcb05;
+}
+
+.nav-item {
+    margin-left: 20px;
+}
+
+.shadow-sm {
+    box-shadow: 0 .125rem .25rem rgba(0, 0, 0, .075) !important;
+}
+
+.bg-dark-pokemon {
+    background-color: #1b1b1b;
+}
