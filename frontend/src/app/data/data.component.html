@@ -1,15 +1,18 @@
-<div class="container">
+<div class="data-container">
+  <div class="content">
+    <div *ngIf="loading">Loading...</div>
+    <div *ngIf="error">{{ error }}</div>
     <div class="row">
-      <div class="col" *ngFor="let pokemon of pokemons">
-        <div class="card">
-          <img [src]="pokemon.image" class="card-img-top" alt="...">
+      <div class="col-lg-4 col-md-6 col-sm-12 cardbox" *ngFor="let pokemon of pokemons">
+        <div class="card" *ngIf="pokemon.name && pokemon.image">
+          <img [src]="pokemon.image" class="card-img-top" alt="Pokemon cards in display">
           <div class="card-body">
             <h5 class="card-title">{{ pokemon.id }} - {{ pokemon.name }}</h5>
             <p class="card-text">Type: {{ pokemon.type }}</p>
-            <p class="card-text">Power: {{ pokemon.power }}</p>
+            <p class="card-text">Power: {{ pokemon.power ? pokemon.power : ""}}</p>
           </div>
         </div>
       </div>
     </div>
   </div>
-  
+</div>
