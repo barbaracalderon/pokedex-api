@@ -32,7 +32,7 @@ body {
 .nav-link {
     color: #adb5bd;
     font-family: 'Press Start 2P', cursive;
-    font-size: 1.2em;
+    font-size: 0.8em;
     padding: 10px 20px;
     transition: color 0.3s, background-color 0.3s, box-shadow 0.3s;
 }
@@ -45,7 +45,7 @@ body {
 }
 
 .nav-item {
-    margin-left: 20px;
+    margin: 12px 15px;
 }
 
 .shadow-sm {
