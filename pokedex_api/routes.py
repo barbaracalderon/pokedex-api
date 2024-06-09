@@ -6,7 +6,7 @@ from .models import PokemonListResponse, PokemonDetailsResponse
 router = APIRouter()
 
 
-@router.get("/", tags=["Root"])
+@router.get("/", tags=["root"])
 async def root():
     return RedirectResponse(url="/docs")
 
