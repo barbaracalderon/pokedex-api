@@ -1,15 +1,43 @@
 import os
 import sqlite3
 import pytest
-from pokedex_api.database import create_database
+from unittest.mock import MagicMock
+from pokedex_api.database import create_database, fetch_and_save_pokemon_data
+
 
 DATABASE_TEST = "test_pokemon.db"
 
+# Mock data
+MOCK_POKEMON_LIST_RESPONSE = {
+    "results": [
+        {"name": "bulbasaur", "url": "https://pokeapi.co/api/v2/pokemon/1/"},
+    ],
+    "next": "https://pokeapi.co/api/v2/pokemon/?offset=20&limit=20",
+}
+
+MOCK_POKEMON_DETAILS_RESPONSE = {
+    "name": "bulbasaur",
+    "types": [{"type": {"name": "grass"}}, {"type": {"name": "poison"}}],
+    "sprites": {"front_default": "https://pokeapi.co/media/sprites/pokemon/1.png"},
+}
+
+MOCK_NEXT_POKEMON_LIST_RESPONSE = {
+    "results": [
+        {"name": "ivysaur", "url": "https://pokeapi.co/api/v2/pokemon/2/"},
+    ],
+    "next": None,
+}
+
+MOCK_NEXT_POKEMON_DETAILS_RESPONSE = {
+    "name": "ivysaur",
+    "types": [{"type": {"name": "grass"}}, {"type": {"name": "poison"}}],
+    "sprites": {"front_default": "https://pokeapi.co/media/sprites/pokemon/2.png"},
+}
+
+
 @pytest.fixture(scope="function")
 def temporary_database():
-
     yield DATABASE_TEST
-
     if os.path.exists(DATABASE_TEST):
         os.remove(DATABASE_TEST)
 
@@ -26,3 +54,52 @@ def test_create_database():
         )
         table_exists = cursor.fetchone() is not None
         assert table_exists
+
+
+@pytest.mark.asyncio
+async def test_fetch_and_save_pokemon_data(mocker, temporary_database):
+    mock_get = mocker.patch("httpx.AsyncClient.get")
+
+    mock_response_list = MagicMock()
+    mock_response_list.json.return_value = MOCK_POKEMON_LIST_RESPONSE
+    mock_response_list.raise_for_status = MagicMock()
+
+    mock_response_details = MagicMock()
+    mock_response_details.json.return_value = MOCK_POKEMON_DETAILS_RESPONSE
+    mock_response_details.raise_for_status = MagicMock()
+
+    mock_next_response_list = MagicMock()
+    mock_next_response_list.json.return_value = MOCK_NEXT_POKEMON_LIST_RESPONSE
+    mock_next_response_list.raise_for_status = MagicMock()
+
+    mock_next_response_details = MagicMock()
+    mock_next_response_details.json.return_value = MOCK_NEXT_POKEMON_DETAILS_RESPONSE
+    mock_next_response_details.raise_for_status = MagicMock()
+
+    mock_get.side_effect = [
+        mock_response_list,
+        mock_response_details,
+        mock_next_response_list,
+        mock_next_response_details,
+    ]
+
+    create_database(DATABASE_TEST)
+
+    await fetch_and_save_pokemon_data(database=temporary_database)
+
+    with sqlite3.connect(temporary_database) as conn:
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM pokemon")
+        results = cursor.fetchall()
+
+        assert len(results) == 2
+        assert results[0][1] == "bulbasaur"
+        assert results[0][2] == "https://pokeapi.co/api/v2/pokemon/1/"
+        assert results[0][3] == "grass"
+        assert results[0][4] == "poison"
+        assert results[0][5] == "https://pokeapi.co/media/sprites/pokemon/1.png"
+        assert results[1][1] == "ivysaur"
+        assert results[1][2] == "https://pokeapi.co/api/v2/pokemon/2/"
+        assert results[1][3] == "grass"
+        assert results[1][4] == "poison"
+        assert results[1][5] == "https://pokeapi.co/media/sprites/pokemon/2.png"

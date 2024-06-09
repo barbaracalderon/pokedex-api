@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Query
-from database import get_pokemon_data, export_to_xml
-from models import PokemonListResponse, PokemonDetailsResponse
+from pokedex_api.database import get_pokemon_data, export_to_xml
+from pokedex_api.models import PokemonListResponse, PokemonDetailsResponse
 
 router = APIRouter()
 

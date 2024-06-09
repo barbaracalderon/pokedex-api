@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from routes import router as api_router
-from database import create_database, fetch_and_save_pokemon_data
+from pokedex_api.routes import router as api_router
+from pokedex_api.database import create_database, fetch_and_save_pokemon_data
 import os
 
 
