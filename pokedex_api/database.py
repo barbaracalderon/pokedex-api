@@ -146,6 +146,9 @@ async def get_pokemon_data(
     cursor = conn.cursor()
 
     try:
+        cursor.execute("SELECT COUNT(*) FROM pokemon")
+        total_count = cursor.fetchone()[0]
+
         if start_index is None or page_size is None:
             cursor.execute("SELECT * FROM pokemon ORDER BY name")
         else:
@@ -173,7 +176,7 @@ async def get_pokemon_data(
                 f"/pokemon?start_index={max(start_index - page_size, 0)}&page_size={page_size}"
             )
 
-        if len(formatted_data) == page_size:
+        if start_index + page_size < total_count:
             pagination["paginaProxima"] = (
                 f"/pokemon?start_index={start_index + page_size}&page_size={page_size}"
             )

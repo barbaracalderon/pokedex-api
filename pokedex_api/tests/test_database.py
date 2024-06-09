@@ -199,3 +199,8 @@ async def test_get_pokemon_data(temporary_database):
     assert data["pagination"]["paginaProxima"] is None
     assert len(data["pokemon"]) == 1
     assert data["pokemon"][0]["name"] == "ivysaur"
+    assert data["pokemon"][0]["type"] == "grass"
+    assert data["pokemon"][0]["power"] == "poison"
+    assert (
+        data["pokemon"][0]["image"] == "https://pokeapi.co/media/sprites/pokemon/2.png"
+    )
