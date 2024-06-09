@@ -1,13 +1,21 @@
 import os
 import sqlite3
 import pytest
+import xml.etree.ElementTree as ET
 from unittest.mock import MagicMock
-from pokedex_api.database import create_database, fetch_and_save_pokemon_data
+from starlette.responses import FileResponse
+from pokedex_api.database import (
+    create_database,
+    fetch_and_save_pokemon_data,
+    export_to_xml,
+    get_pokemon_data
+)
 
 
 DATABASE_TEST = "test_pokemon.db"
+XML_FILE_TEST = "test_pokemon.xml"
 
-# Mock data
+
 MOCK_POKEMON_LIST_RESPONSE = {
     "results": [
         {"name": "bulbasaur", "url": "https://pokeapi.co/api/v2/pokemon/1/"},
@@ -103,3 +111,47 @@ async def test_fetch_and_save_pokemon_data(mocker, temporary_database):
         assert results[1][3] == "grass"
         assert results[1][4] == "poison"
         assert results[1][5] == "https://pokeapi.co/media/sprites/pokemon/2.png"
+
+@pytest.mark.asyncio
+async def test_export_to_xml(temporary_database):
+    create_temporary_database(DATABASE_TEST)
+    
+    conn = sqlite3.connect(DATABASE_TEST)
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM pokemon")
+    pokemon_entries = cursor.fetchall()
+    print(pokemon_entries)
+    conn.close()
+    
+    response = await export_to_xml(filename=XML_FILE_TEST, database=DATABASE_TEST)
+    
+    assert isinstance(response, FileResponse)
+    assert os.path.exists(XML_FILE_TEST)
+    
+    tree = ET.parse(XML_FILE_TEST)
+    root = tree.getroot()
+    xml_string = ET.tostring(root)
+    print(xml_string)
+    assert root.tag == "Pokemons"
+    
+    pokemons = root.findall("Pokemon")
+    assert len(pokemons) == 1
+    
+    pokemon_elem = pokemons[0]
+    assert pokemon_elem.find("id").text == "1"
+    assert pokemon_elem.find("name").text == "bulbasaur"
+    assert pokemon_elem.find("url").text == "https://pokeapi.co/api/v2/pokemon/1/"
+
+@pytest.mark.asyncio
+async def test_get_pokemon_data():
+    create_temporary_database(DATABASE_TEST)
+    data = await get_pokemon_data(start_index=0, page_size=10, details=True, database=DATABASE_TEST)
+    print(data)
+
+def create_temporary_database(database):
+    conn = sqlite3.connect(database)
+    cursor = conn.cursor()
+    cursor.execute("CREATE TABLE IF NOT EXISTS pokemon (id INTEGER PRIMARY KEY, name TEXT, url TEXT, type TEXT, power TEXT, image TEXT)")
+    cursor.execute("INSERT INTO pokemon (id, name, url, type, power, image) VALUES (1, 'bulbasaur', 'https://pokeapi.co/api/v2/pokemon/1/', 'grass', 'poison', 'https://pokeapi.co/media/sprites/pokemon/1.png')")
+    conn.commit()
+    conn.close()

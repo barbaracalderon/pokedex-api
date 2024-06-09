@@ -85,17 +85,20 @@ async def export_to_xml(
 
     Args:
         filename (str): The name of the XML file to export data to. Defaults to 'pokemon.xml'.
+        database (str) : The path of the database where data will be fetched from.
 
     Returns:
         Union[FileResponse, None]: A FileResponse containing the exported XML file if successful, else None.
     """
     try:
         logging.info("Exporting Pokémon to XML...")
-        conn = sqlite3.connect(DATABASE)
+        conn = sqlite3.connect(database)
         cursor = conn.cursor()
 
         cursor.execute("SELECT * FROM pokemon ORDER BY name")
         pokemon_data = cursor.fetchall()
+
+        logging.info(f"Fetched {len(pokemon_data)} Pokémon entries from the database.")
 
         root = ET.Element("Pokemons")
         for pokemon in pokemon_data:
