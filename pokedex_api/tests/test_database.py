@@ -168,7 +168,7 @@ async def test_get_pokemon_data(temporary_database):
         start_index=0, page_size=1, details=False, database=temporary_database
     )
     assert data["pagination"]["paginaAnterior"] is None
-    assert data["pagination"]["paginaProxima"] == "/pokemon?start_index=1&page_size=1"
+    assert data["pagination"]["paginaProxima"] == "/pokemons?start_index=1&page_size=1"
     assert len(data["pokemon"]) == 1
     assert data["pokemon"][0]["name"] == "bulbasaur"
     assert "type" not in data["pokemon"][0]
@@ -195,7 +195,7 @@ async def test_get_pokemon_data(temporary_database):
     data = await get_pokemon_data(
         start_index=1, page_size=1, details=True, database=temporary_database
     )
-    assert data["pagination"]["paginaAnterior"] == "/pokemon?start_index=0&page_size=1"
+    assert data["pagination"]["paginaAnterior"] == "/pokemons?start_index=0&page_size=1"
     assert data["pagination"]["paginaProxima"] is None
     assert len(data["pokemon"]) == 1
     assert data["pokemon"][0]["name"] == "ivysaur"

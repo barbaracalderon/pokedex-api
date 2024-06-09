@@ -165,12 +165,12 @@ async def get_pokemon_data(
         if start_index is not None and page_size is not None:
             if start_index + page_size < total_count:
                 pagination["paginaProxima"] = (
-                    f"/pokemon?start_index={start_index + page_size}&page_size={page_size}"
+                    f"/pokemons?start_index={start_index + page_size}&page_size={page_size}"
                 )
 
             if start_index > 0:
                 pagination["paginaAnterior"] = (
-                    f"/pokemon?start_index={max(start_index - page_size, 0)}&page_size={page_size}"
+                    f"/pokemons?start_index={max(start_index - page_size, 0)}&page_size={page_size}"
                 )
 
         return {"pokemon": formatted_data, "pagination": pagination}
