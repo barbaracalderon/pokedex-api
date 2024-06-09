@@ -3,9 +3,8 @@ import sqlite3
 import httpx
 import xml.etree.ElementTree as ET
 from fastapi.responses import FileResponse
-from typing import Union
+from typing import Union, Optional, Dict, Any
 from fastapi import HTTPException
-
 
 POKEAPI_URL = "https://pokeapi.co/api/v2/pokemon"
 DATABASE = "pokemon.db"
@@ -129,19 +128,11 @@ async def export_to_xml(
 
 
 async def get_pokemon_data(
-    start_index: int, page_size: int, details: bool = False, database: str = DATABASE
-):
-    """
-    Retrieves Pokémon data from the database.
-
-    Args:
-        start_index (int): The index to start retrieving Pokémon from.
-        page_size (int): The number of Pokémon per page.
-        details (bool): If True, includes detailed Pokémon information such as type, power, and image.
-
-    Returns:
-        dict: A dictionary containing Pokémon data and pagination information.
-    """
+    start_index: Optional[int] = None,
+    page_size: Optional[int] = None,
+    details: bool = False,
+    database: str = DATABASE,
+) -> Dict[str, Any]:
     conn = sqlite3.connect(database)
     cursor = conn.cursor()
 
@@ -171,15 +162,16 @@ async def get_pokemon_data(
 
         pagination = {"paginaAnterior": None, "paginaProxima": None}
 
-        if start_index is not None and start_index > 0:
-            pagination["paginaAnterior"] = (
-                f"/pokemon?start_index={max(start_index - page_size, 0)}&page_size={page_size}"
-            )
+        if start_index is not None and page_size is not None:
+            if start_index + page_size < total_count:
+                pagination["paginaProxima"] = (
+                    f"/pokemon?start_index={start_index + page_size}&page_size={page_size}"
+                )
 
-        if start_index + page_size < total_count:
-            pagination["paginaProxima"] = (
-                f"/pokemon?start_index={start_index + page_size}&page_size={page_size}"
-            )
+            if start_index > 0:
+                pagination["paginaAnterior"] = (
+                    f"/pokemon?start_index={max(start_index - page_size, 0)}&page_size={page_size}"
+                )
 
         return {"pokemon": formatted_data, "pagination": pagination}
 
