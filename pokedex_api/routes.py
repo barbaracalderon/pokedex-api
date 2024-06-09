@@ -1,8 +1,14 @@
 from fastapi import APIRouter, Query
+from fastapi.responses import RedirectResponse
 from .database import get_pokemon_data, export_to_xml
 from .models import PokemonListResponse, PokemonDetailsResponse
 
 router = APIRouter()
+
+
+@router.get("/", tags=["Root"])
+async def root():
+    return RedirectResponse(url="/docs")
 
 
 @router.get(
