@@ -21,8 +21,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
 @app.on_event("startup")
 async def startup_event():
-    if os.path.exists('pokemon.db') is False:
+    if os.path.exists("pokemon.db") is False:
         create_database()
         await fetch_and_save_pokemon_data()
