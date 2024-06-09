@@ -8,7 +8,7 @@ from pokedex_api.database import (
     create_database,
     fetch_and_save_pokemon_data,
     export_to_xml,
-    get_pokemon_data
+    get_pokemon_data,
 )
 
 
@@ -45,9 +45,13 @@ MOCK_NEXT_POKEMON_DETAILS_RESPONSE = {
 
 @pytest.fixture(scope="function")
 def temporary_database():
+    create_database(DATABASE_TEST)
     yield DATABASE_TEST
+    
     if os.path.exists(DATABASE_TEST):
         os.remove(DATABASE_TEST)
+    if os.path.exists(XML_FILE_TEST):
+        os.remove(XML_FILE_TEST)
 
 
 def test_create_database():
@@ -91,8 +95,6 @@ async def test_fetch_and_save_pokemon_data(mocker, temporary_database):
         mock_next_response_details,
     ]
 
-    create_database(DATABASE_TEST)
-
     await fetch_and_save_pokemon_data(database=temporary_database)
 
     with sqlite3.connect(temporary_database) as conn:
@@ -112,46 +114,55 @@ async def test_fetch_and_save_pokemon_data(mocker, temporary_database):
         assert results[1][4] == "poison"
         assert results[1][5] == "https://pokeapi.co/media/sprites/pokemon/2.png"
 
+
 @pytest.mark.asyncio
 async def test_export_to_xml(temporary_database):
-    create_temporary_database(DATABASE_TEST)
-    
-    conn = sqlite3.connect(DATABASE_TEST)
+    create_temporary_database(temporary_database)
+
+    conn = sqlite3.connect(temporary_database)
     cursor = conn.cursor()
     cursor.execute("SELECT * FROM pokemon")
     pokemon_entries = cursor.fetchall()
     print(pokemon_entries)
     conn.close()
-    
-    response = await export_to_xml(filename=XML_FILE_TEST, database=DATABASE_TEST)
-    
+
+    response = await export_to_xml(filename=XML_FILE_TEST, database=temporary_database)
+
     assert isinstance(response, FileResponse)
     assert os.path.exists(XML_FILE_TEST)
-    
+
     tree = ET.parse(XML_FILE_TEST)
     root = tree.getroot()
     xml_string = ET.tostring(root)
     print(xml_string)
     assert root.tag == "Pokemons"
-    
+
     pokemons = root.findall("Pokemon")
     assert len(pokemons) == 1
-    
+
     pokemon_elem = pokemons[0]
     assert pokemon_elem.find("id").text == "1"
     assert pokemon_elem.find("name").text == "bulbasaur"
     assert pokemon_elem.find("url").text == "https://pokeapi.co/api/v2/pokemon/1/"
 
+
 @pytest.mark.asyncio
-async def test_get_pokemon_data():
-    create_temporary_database(DATABASE_TEST)
-    data = await get_pokemon_data(start_index=0, page_size=10, details=True, database=DATABASE_TEST)
+async def test_get_pokemon_data(temporary_database):
+    create_temporary_database(temporary_database)
+    data = await get_pokemon_data(
+        start_index=0, page_size=10, details=True, database=temporary_database
+    )
     print(data)
+
 
 def create_temporary_database(database):
     conn = sqlite3.connect(database)
     cursor = conn.cursor()
-    cursor.execute("CREATE TABLE IF NOT EXISTS pokemon (id INTEGER PRIMARY KEY, name TEXT, url TEXT, type TEXT, power TEXT, image TEXT)")
-    cursor.execute("INSERT INTO pokemon (id, name, url, type, power, image) VALUES (1, 'bulbasaur', 'https://pokeapi.co/api/v2/pokemon/1/', 'grass', 'poison', 'https://pokeapi.co/media/sprites/pokemon/1.png')")
+    cursor.execute(
+        "CREATE TABLE IF NOT EXISTS pokemon (id INTEGER PRIMARY KEY, name TEXT, url TEXT, type TEXT, power TEXT, image TEXT)"
+    )
+    cursor.execute(
+        "INSERT INTO pokemon (id, name, url, type, power, image) VALUES (1, 'bulbasaur', 'https://pokeapi.co/api/v2/pokemon/1/', 'grass', 'poison', 'https://pokeapi.co/media/sprites/pokemon/1.png')"
+    )
     conn.commit()
     conn.close()
