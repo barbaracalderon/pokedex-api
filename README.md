@@ -9,6 +9,7 @@ The primary objectives of the Pokédex project are as follows:
 - To create an API for managing a list of captured Pokémon with pagination and detailed views.
 - To develop a user-friendly frontend interface for browsing and accessing Pokémon information.
 - To implement additional features such as exporting Pokémon data and documentation generation.
+- Use of **Gitflow** for development.
 
 ## Author
 Barbara Calderon, software developer.

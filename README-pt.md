@@ -8,6 +8,8 @@ Os principais objetivos do projeto Pokédex são os seguintes:
 - Criar uma API para gerenciar uma lista de Pokémon capturados com paginação e visualizações detalhadas.
 - Desenvolver uma interface frontend amigável para navegar e acessar informações sobre os Pokémon.
 - Implementar recursos adicionais, como exportação de dados de Pokémon e geração de documentação.
+- Uso de **Gitflow** para o desenvolvimento.
+
 
 ## Autora
 Barbara Calderon, desenvolvedora de software.
