@@ -1,3 +1,6 @@
+_(English version | [Clique aqui para versão Português-BR](https://github.com/barbaracalderon/pokedex-api/blob/main/README-pt.md))_
+
+
 # Pokédex API and Frontend
 
 This project consists of building a Pokédex API and a simple frontend interface to interact with it. The Pokédex API is developed using FastAPI in Python, and the frontend is built using Angular.
