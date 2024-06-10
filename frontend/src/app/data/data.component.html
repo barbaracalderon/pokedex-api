@@ -1,15 +1,29 @@
 <div class="data-container">
   <div class="content">
-    <div *ngIf="loading">Loading...</div>
-    <div *ngIf="error">{{ error }}</div>
+    <div *ngIf="loading" class="loading-spinner">
+      <div class="spinner-border text-warning" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    </div>
+    <div *ngIf="error" class="error-message">{{ error }}</div>
+    
+    <div class="description">
+      <p>Here is where we display all the Pokémon data we have stored in our API. This includes ID, Name, Type, Power, and Image.</p>
+      <p>They are conveniently in alphabetical order.</p>
+    </div>
+    
     <div class="row">
-      <div class="col-lg-4 col-md-6 col-sm-12 cardbox" *ngFor="let pokemon of pokemons">
-        <div class="card" *ngIf="pokemon.name && pokemon.image">
-          <img [src]="pokemon.image" class="card-img-top" alt="Pokemon cards in display">
+      <div class="col-lg-4 col-md-6 col-sm-12" *ngFor="let pokemon of pokemons">
+        <div class="card">
+          <div class="card-header">
+            <h5 class="card-title">{{ pokemon.id }} - {{ pokemon.name | titlecase }}</h5>
+          </div>
+          <img [src]="pokemon.image" class="card-img-top" alt="{{ pokemon.name }}">
           <div class="card-body">
-            <h5 class="card-title">{{ pokemon.id }} - {{ pokemon.name }}</h5>
-            <p class="card-text">Type: {{ pokemon.type }}</p>
-            <p class="card-text">Power: {{ pokemon.power ? pokemon.power : ""}}</p>
+            <div class="card-text-container">
+              <span class="card-text type">Type: {{ pokemon.type | titlecase }}</span>
+              <span class="card-text power">Power: {{ pokemon.power ? (pokemon.power | titlecase) : "N/A" }}</span>
+            </div>
           </div>
         </div>
       </div>
