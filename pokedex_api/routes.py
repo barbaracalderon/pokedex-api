@@ -13,7 +13,7 @@ async def root():
 
 @router.get(
     "/pokemons",
-    response_model=PokemonListResponse,
+    response_model=PokemonListResponse, 
     summary="List Pokémon",
     description="Returns a list of Pokémon with pagination, ordered alphabetically by name.",
 )
