@@ -9,6 +9,8 @@ Os principais objetivos do projeto Pokédex são os seguintes:
 - Desenvolver uma interface frontend amigável para navegar e acessar informações sobre os Pokémon.
 - Implementar recursos adicionais, como exportação de dados de Pokémon e geração de documentação.
 - Uso de **Gitflow** para o desenvolvimento.
+- Testes unitários com Pytest.
+- Docker e Docker-Compose para build e deploy.
 
 
 ## Autora
